@@ -1,0 +1,8 @@
+.idea/
+*.iml
+Script/Credentials.js
+bin/
+node_modules/
+.DS_Store
+Templates/
+*.docx

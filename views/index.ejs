@@ -1,0 +1,50 @@
+<% include partials/header %>
+
+<div class="container" style="text-align: center">
+    <form action="/" method="POST">
+        <% if(data != null && data != undefined) {
+                for (let entry of data) { %>
+        <div>
+            <input type="text" placeholder="Customer name" name="form[0]" value="<%= entry.name %>"/>
+            <input type="number" min="0.01" step="0.01" name="form[0]" value="<%= entry.size %>"/> TB
+        </div>
+        <br><br>
+        <% }
+        } else { %>
+        <div>
+            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
+            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
+        </div>
+        <br><br>
+        <div>
+            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
+            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
+        </div>
+        <br><br>
+        <div>
+            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
+            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
+        </div>
+        <br><br>
+        <div>
+            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
+            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
+        </div>
+        <br><br>
+        <div>
+            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
+            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
+        </div>
+        <br><br>
+
+        <% } %>
+
+        <button>
+            click me
+        </button>
+    </form>
+</div>
+
+<% include partials/footer %>
+
+<script type="text/javascript" src="/scripts/index.js"></script>
