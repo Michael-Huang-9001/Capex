@@ -18,41 +18,6 @@ const helmet = require('helmet');
 // APP CONFIGURATION
 // app.use(favicon(__dirname + '/public/favicon.ico'));
 
-app.use(helmet());
-
-// Using sessions for tracking logins
-// Session stuff here
-app.use(session({
-    resave: false,
-    saveUninitialized: false,
-    store: new MemoryStore({
-        ttl: 24 * 60 * 60 * 1000,
-        checkPeriod: 60 * 60 * 1000 // Checks for expiry every 24h
-    }),
-    secret: 'lebron to sixers',
-    cookie: {
-        maxAge: 24 * 60 * 60 * 1000
-    }
-}));
-
-// Exposes the username for the header nav bar.
-app.use(function expose_username(req, res, next) {
-    res.locals.user = req.session.user;
-    next();
-});
-
-// Disables back button from showing contents when logged out.
-app.use(function (req, res, next) {
-    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-    next();
-});
-
-// Prints session data
-// app.use(function printSession(req, res, next) {
-//     console.log('req.session', req.session);
-//     next();
-// });
-
 // set so we don't have to type .ejs all the time when routing
 app.set("view engine", "ejs");
 // used so we can make a public folder that contains stylesheet and js, and be able to access it

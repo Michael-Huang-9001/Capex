@@ -1,48 +1,68 @@
 <% include partials/header %>
 
 <div class="container" style="text-align: center">
-    <form action="/" method="POST">
-        <% if(data != null && data != undefined) {
-                for (let entry of data) { %>
-        <div>
-            <input type="text" placeholder="Customer name" name="form[0]" value="<%= entry.name %>"/>
-            <input type="number" min="0.01" step="0.01" name="form[0]" value="<%= entry.size %>"/> TB
-        </div>
-        <br><br>
-        <% }
-        } else { %>
-        <div>
-            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
-            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
-        </div>
-        <br><br>
-        <div>
-            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
-            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
-        </div>
-        <br><br>
-        <div>
-            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
-            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
-        </div>
-        <br><br>
-        <div>
-            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
-            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
-        </div>
-        <br><br>
-        <div>
-            <input type="text" placeholder="Customer name" name="form[0]" value=""/>
-            <input type="number" min="0.01" step="0.01" name="form[0]" value=""/> TB
-        </div>
-        <br><br>
+    <br>
+    <h2>Capex Calculator</h2>
 
-        <% } %>
+    <form id="form" autocomplete="off" action="/" method="POST">
 
-        <button>
-            click me
+        <div>
+            <select name="location">
+                <option value="3">SC4</option>
+                <option value="2">Frankfurt/Markham</option>
+            </select>
+            <button id="add_row" type="button" class="btn btn-primary">Add row</button>
+            <button id="delete_row" type="button" class="btn btn-primary">Delete row</button>
+        </div>
+        <br>
+
+        <table id="form_table" class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Customer name</th>
+                <th>Data size (TB)</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <% if(example && example.length) {
+            for(let i = 0; i < example.length; i++) { %>
+            <tr>
+                <td><input type="text" class="form-control" placeholder="Customer name" name="form[<%= i %>][name]"
+                           value="<%= example[i].name %>"/></td>
+                <td><input type="number" class="form-control" placeholder="Data size" min="0" step="0.01"
+                           name="form[<%= i %>][size]" value="<%= example[i].size %>"/></td>
+            </tr>
+            <% } } else { %>
+            <tr>
+                <td><input type="text" class="form-control" placeholder="Customer name" name="form[0][name]"
+                           value=""/></td>
+                <td><input type="number" class="form-control" placeholder="Data size" min="0" step="0.01"
+                           name="form[0][size]" value=""/></td>
+            </tr>
+            <% } %>
+
+            </tbody>
+        </table>
+
+
+        <button id="submit_form" type="submit" class="btn-primary">
+            Calc!
         </button>
     </form>
+    <br>
+
+    <fieldset>
+        <legend>Results</legend>
+        <div>
+            Blobs: <%= blobs.sets %> sets, <%= blobs.hosts %> hosts
+        </div>
+        <br>
+
+        <div>
+            Structs: <%= structs.sets %> sets, <%= structs.hosts %> hosts
+        </div>
+    </fieldset>
 </div>
 
 <% include partials/footer %>

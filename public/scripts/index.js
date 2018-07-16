@@ -1,13 +1,22 @@
-let rows = $('#customer_list tbody tr');
+$(document).ready(() => {
 
-// Used for searching/filtering customer names
-$('#search_box').keyup(function () {
+    $("#add_row").click(function (e) {
+        let table = $('#form_table');
+        console.log(table.find('tbody tr').length);
 
-    let val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        table.find('tbody').append('<tr><td>' +
+            '<input type="text" class="form-control" placeholder="Customer name" name="form[' + table.find('tbody tr').length + '][name]" value=""/>' +
+            '</td>' +
+            '<td>' +
+            '<input type="number" class="form-control" placeholder="Data size" min="0" step="0.01" name="form[' + table.find('tbody tr').length + '][size]" value=""/>' +
+            '</td></tr>');
+    });
 
-    rows.show().filter(function () {
-        //alert($(this).text());
-        let text = $(this).find(".column1").text().replace(/\s+/g, ' ').toLowerCase();
-        return !~text.indexOf(val);
-    }).hide();
+    $("#delete_row").click(function (e) {
+        let table = $('#form_table');
+
+        if (table.find('tbody tr').length > 1) {
+            table.find('tbody tr:last-child').remove();
+        }
+    });
 });
