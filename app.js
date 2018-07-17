@@ -9,8 +9,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const expressSanitizer = require("express-sanitizer");
-const session = require("express-session");
-const MemoryStore = require('memorystore')(session);
 const favicon = require('serve-favicon');
 const app = express();
 const helmet = require('helmet');
@@ -46,6 +44,6 @@ app.use(function (err, req, res, next) {
 });
 
 
-app.listen(8080, function () {
-    console.log("App is running on 8080");
+app.listen(8082, function () {
+    console.log("App is running on 8082");
 });

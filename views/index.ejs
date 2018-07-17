@@ -9,7 +9,12 @@
         <div>
             <select name="location">
                 <option value="3">SC4</option>
-                <option value="2">Frankfurt/Markham</option>
+                <option value="2"
+                        <% if(location == 2) { %>
+                        selected
+                        <% } %>
+                >Frankfurt/Markham
+                </option>
             </select>
             <button id="add_row" type="button" class="btn btn-primary">Add row</button>
             <button id="delete_row" type="button" class="btn btn-primary">Delete row</button>
@@ -46,23 +51,36 @@
         </table>
 
 
-        <button id="submit_form" type="submit" class="btn-primary">
+        <button id="submit_form" type="submit" class="btn btn-primary">
             Calc!
         </button>
-    </form>
-    <br>
 
-    <fieldset>
-        <legend>Results</legend>
-        <div>
-            Blobs: <%= blobs.sets %> sets, <%= blobs.hosts %> hosts
-        </div>
         <br>
 
-        <div>
-            Structs: <%= structs.sets %> sets, <%= structs.hosts %> hosts
-        </div>
-    </fieldset>
+        <fieldset>
+            <legend>Results</legend>
+            <div>
+                Blobs: <%= blobs.sets %> sets, <%= blobs.hosts %> hosts
+            </div>
+            <br>
+
+            <div>
+                Structs: <%= structs.sets %> sets, <%= structs.hosts %> hosts
+            </div>
+            <br>
+
+            <div>
+                <input type="text" hidden value="<%= generate_report %>" name="generate_report"/>
+                <button id="submit_form" type="submit" class="btn btn-primary"
+                        formaction="/download"
+                        <% if(!generate_report) { %>
+                        hidden disabled
+                        <% } %>
+                >Generate PDF
+                </button>
+            </div>
+        </fieldset>
+    </form>
 </div>
 
 <% include partials/footer %>

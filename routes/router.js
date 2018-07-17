@@ -1,5 +1,3 @@
-
-
 const express = require("express");
 const router = express.Router();
 const ldap = require('ldapjs');
@@ -24,97 +22,140 @@ router.get("/", function (req, res) {
     });
     let blobs = {"sets": 0, "hosts": 0};
     let structs = {"sets": 0, "hosts": 0};
-    res.render('index', {example: example, location: null, blobs: blobs, structs: structs});
-    // res.render('index', {example: null, location: null, blobs: blobs, structs: structs});
+    res.render('index', {example: example, location: null, blobs: blobs, structs: structs, generate_report: false});
+    // res.render('index', {example: null, location: null, blobs: blobs, structs: structs, generate_report: false});
 });
 
 router.post("/", function (req, res) {
     console.log('-- POSTED');
 
-    let data = req.body.form;
-    if (data) {
-        let sum = 0;
-        let sizes = [];
+    try {
+        let data = req.body.form;
 
-        // This filters out any empty rows, e.g. both customer name and data size is empty
-        for (let i = data.length - 1; i >= 0; i--) {
-            if (data[i].name || data[i].size) {
-                sum += Number(data[i].size);
-                sizes.push((data[i].size) ? data[i].size : 0);
-            } else {
-                data.splice(i, 1);
+        if (data) {
+            let sum = 0;
+            let sizes = []; // For index
+
+            // This filters out any empty rows, e.g. both customer name and data size is empty
+            for (let i = data.length - 1; i >= 0; i--) {
+                if (data[i].name || data[i].size) {
+                    let num = Number(data[i].size);
+                    sum += num;
+                    sizes.push((num) ? num : 0);
+                } else {
+                    data.splice(i, 1);
+                }
             }
+
+            console.log('Data size sum: ' + sum);
+            console.log(sizes);
+
+            console.log("SORTED: ");
+            data.sort(function (a, b) {
+                return b.size - a.size;
+            });
+            console.log(data);
+
+
+            let blobs = script.get_blob_count(sum);
+            console.log('--- Blobs:');
+            console.log(blobs);
+
+            let structs = script.get_struct_count(sum, Number(req.body.location));
+            console.log('--- Structs:');
+            console.log(structs);
+
+            res.render('index', {
+                example: data,
+                location: req.body.location,
+                blobs: blobs,
+                structs: structs,
+                generate_report: true
+            });
+        } else {
+            res.render('index', {
+                example: data,
+                location: null,
+                blobs: {sets: 0, hosts: 0},
+                structs: {sets: 0, hosts: 0},
+                generate_report: false
+            });
         }
-
-        console.log('Data size sum: ' + sum);
-        console.log(sizes);
-
-        console.log("SORTED: ");
-        data.sort(function (a, b) {
-            return b.size - a.size;
+    } catch (error) {
+        res.render('index', {
+            example: req.body.form,
+            location: null,
+            blobs: {sets: 0, hosts: 0},
+            structs: {sets: 0, hosts: 0},
+            generate_report: false
         });
-        console.log(data);
-        //data = (data.length) ? data : [{'name': '', 'size': 0}]; // Make to to have least 1 row
-
-        let blobs = script.get_blob_count(sum);
-        console.log('--- Blobs:');
-        console.log(blobs);
-
-        let structs = script.get_struct_count(sum, Number(req.body.location));
-        console.log('--- Structs:');
-        console.log(structs);
-
-        console.log('example: ');
-        console.log(data);
-
-        res.render('index', {example: data, location: req.body.location, blobs: blobs, structs: structs});
-    } else {
-        res.render('index', {example: data, location: null, blobs: {sets: 0, hosts: 0}, structs: {sets: 0, hosts: 0}});
     }
 });
 
-router.post("/", function (req, res) {
-    console.log('-- POSTED');
+router.post("/download", function (req, res) {
+    console.log('\n-- POSTED IN DOWNLOAD');
 
-    let data = req.body.form;
-    if (data) {
-        let sum = 0;
-        let sizes = [];
+    try {
+        let data = req.body.form;
+        if (data && req.body.generate_report) {
+            let sum = 0;
+            let sizes = []; // For index
 
-        // This filters out any empty rows, e.g. both customer name and data size is empty
-        for (let i = data.length - 1; i >= 0; i--) {
-            if (data[i].name || data[i].size) {
-                sum += Number(data[i].size);
-                sizes.push((data[i].size) ? data[i].size : 0);
-            } else {
-                data.splice(i, 1);
+            // This filters out any empty rows, e.g. both customer name and data size is empty
+            for (let i = data.length - 1; i >= 0; i--) {
+                if (data[i].name || data[i].size) {
+                    let num = Number(data[i].size);
+                    sum += num;
+                    sizes.push((num) ? num : 0);
+                } else {
+                    data.splice(i, 1);
+                }
             }
+
+            console.log('Data size sum: ' + sum);
+            console.log(sizes);
+
+            console.log("SORTED: ");
+            data.sort(function (a, b) {
+                return b.size - a.size;
+            });
+            console.log(data);
+
+
+            let blobs = script.get_blob_count(sum);
+            console.log('--- Blobs:');
+            console.log(blobs);
+
+            let structs = script.get_struct_count(sum, Number(req.body.location));
+            console.log('--- Structs:');
+            console.log(structs);
+
+            report_generator.generate_report({
+                table: data,
+                blobs: blobs,
+                structs: structs,
+                sum: sum,
+                location: (Number(req.body.location) === 2) ? 'Frankfurt/Markham' : 'SC4'
+            }, res);
+
+            // res.download
+        } else {
+            res.render('index', {
+                example: data,
+                location: null,
+                blobs: {sets: 0, hosts: 0},
+                structs: {sets: 0, hosts: 0},
+                generate_report: false
+            });
         }
-
-        console.log('Data size sum: ' + sum);
-        console.log(sizes);
-
-        console.log("SORTED: ");
-        data.sort(function (a, b) {
-            return b.size - a.size;
+    } catch (error) {
+        res.render('index', {
+            example: req.body.form,
+            location: null,
+            blobs: {sets: 0, hosts: 0},
+            structs: {sets: 0, hosts: 0},
+            generate_report: false
         });
-        console.log(data);
-        //data = (data.length) ? data : [{'name': '', 'size': 0}]; // Make to to have least 1 row
-
-        let blobs = script.get_blob_count(sum);
-        console.log('--- Blobs:');
-        console.log(blobs);
-
-        let structs = script.get_struct_count(sum, Number(req.body.location));
-        console.log('--- Structs:');
-        console.log(structs);
-
-        console.log('example: ');
-        console.log(data);
-
-        report_generator.generate_report({})
-    } else {
-        res.render('index', {example: data, location: null, blobs: {sets: 0, hosts: 0}, structs: {sets: 0, hosts: 0}});
     }
 });
 
