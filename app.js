@@ -1,10 +1,3 @@
-/**
- * Rick Dales once said that this archiving dashboard may not be around forever.
- * If that's the case, this thing will either be obsolete or needs to be rewritten based on whatever the new platform is, if needed at all.
- *
- * The most important thing is to identify where a field in the report can be found.
- */
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");

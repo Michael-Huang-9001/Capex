@@ -1,16 +1,5 @@
-/**
- *
- * IF YOU WANT TO RUN THIS SCRIPT INDEPENDENTLY AND NOT IN EXPRESS, ADD A '.' (PERIOD) IN FRONT OF EVERY FILEPATH.
- * IN NODE, USE './SCREENSHOTS/...'
- * INDEPENDENTLY, USE '../SCREENSHOTS/...'
- */
-
 const PDFDocument = require('pdfkit');
 
-/**
- * Generates DOCX file, planning to switch to docx rather than officegen
- * param pdf is a boolean that indicates whether to generate a pdf or docx
- */
 async function generate_report(report_json, res) {
     try {
         console.log('Downloading pdf')

@@ -1,5 +1,6 @@
 a {
     color: #00B7FF;
+    text-decoration: none;
 }
 
 input {
@@ -16,16 +17,3 @@ textarea {
 .container {
     max-width: 60% !important;
 }
-
-/*table td input {*/
-/*position: absolute;*/
-/*display: block;*/
-/*top:0;*/
-/*left:0;*/
-/*margin: 0;*/
-/*height: 100%;*/
-/*width: 100%;*/
-/*border: none;*/
-/*padding: 10px;*/
-/*box-sizing: border-box;*/
-/*}*/

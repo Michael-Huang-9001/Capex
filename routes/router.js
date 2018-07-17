@@ -1,8 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const ldap = require('ldapjs');
-const sanitize_fname = require('sanitize-filename'); // Used for downloading the file to escape/sanitize potential metacharacters
-
 
 const script = require('../Script/Calc');
 const report_generator = require('../Script/ReportGenerator');
