@@ -13,7 +13,8 @@ const PDFDocument = require('pdfkit');
  */
 async function generate_report(report_json, res) {
     try {
-        console.log(report_json);
+        console.log('Downloading pdf')
+        //console.log(report_json);
 
         const doc = new PDFDocument();
         doc.registerFont('Times-New-Roman', 'Script/Times New Roman.ttf');
@@ -71,7 +72,7 @@ async function generate_report(report_json, res) {
         doc.pipe(res);
         doc.end();
     } catch (error) {
-
+        console.log(error);
     }
 }
 

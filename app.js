@@ -9,12 +9,16 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const expressSanitizer = require("express-sanitizer");
-const favicon = require('serve-favicon');
+//const favicon = require('serve-favicon');
 const app = express();
 const helmet = require('helmet');
+const comp = require('compression');
 
 // APP CONFIGURATION
 // app.use(favicon(__dirname + '/public/favicon.ico'));
+
+app.use(helmet());
+app.use(comp());
 
 // set so we don't have to type .ejs all the time when routing
 app.set("view engine", "ejs");
@@ -42,7 +46,6 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.send(err.message);
 });
-
 
 app.listen(8082, function () {
     console.log("App is running on 8082");

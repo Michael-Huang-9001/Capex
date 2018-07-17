@@ -11,14 +11,14 @@ const struct_data_ratio = 0.1;
 const struct_size = 21; // TB
 
 function get_blob_count(sum) {
-    console.log('===== Blob Calc =====');
+    // console.log('===== Blob Calc =====');
     if (sum <= 0) {
         // Early termination to save work
         return {'sets': 0, 'hosts': 0};
     }
     let blobs = {};
     let blob_total = sum * data_reduction_rate * blob_data_ratio;
-    console.log('Blob total: ' + blob_total);
+    // console.log('Blob total: ' + blob_total);
     let blob_sets = Math.floor(blob_total / blob_size);
     blob_sets += (blob_total % blob_size == 0) ? 0 : 1;
     blobs['sets'] = blob_sets;
@@ -27,14 +27,14 @@ function get_blob_count(sum) {
 }
 
 function get_struct_count(sum, host_multiplier) {
-    console.log('===== Structs Calc =====');
+    // console.log('===== Structs Calc =====');
     if (sum <= 0) {
         // Early termination to save work
         return {'sets': 0, 'hosts': 0};
     }
     let structs = {};
     let structs_total = sum * data_reduction_rate * struct_data_ratio;
-    console.log('Structs total: ' + structs_total);
+    // console.log('Structs total: ' + structs_total);
     let struct_sets = Math.floor(structs_total / struct_size);
     struct_sets += (structs_total % struct_size == 0) ? 0 : 1;
     structs['sets'] = struct_sets;
@@ -56,10 +56,10 @@ async function calc_sum(data) {
             sum += Number(data[i].size);
         } else {
             data.splice(i, 1);
-            console.log('splicing');
+            // console.log('splicing');
         }
     }
-    console.log('Sum: ' + sum);
+    // console.log('Sum: ' + sum);
     return sum;
 }
 

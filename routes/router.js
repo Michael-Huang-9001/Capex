@@ -9,25 +9,28 @@ const report_generator = require('../Script/ReportGenerator');
 
 // Entry point for the app startup, grabs customer list from Archiving Dashboard
 router.get("/", function (req, res) {
-    // For testing
-    let example = [
-        {name: "A", size: 200},
-        {name: "B", size: 67},
-        {name: "C", size: 45},
-        {name: "D", size: 33},
-        {name: "E", size: 18}
-    ];
-    example.sort((a, b) => {
-        return 0.5 - Math.random();
-    });
     let blobs = {"sets": 0, "hosts": 0};
     let structs = {"sets": 0, "hosts": 0};
-    res.render('index', {example: example, location: null, blobs: blobs, structs: structs, generate_report: false});
-    // res.render('index', {example: null, location: null, blobs: blobs, structs: structs, generate_report: false});
+
+    // For testing
+    // let example = [
+    //     {name: "A", size: 200},
+    //     {name: "B", size: 67},
+    //     {name: "C", size: 45},
+    //     {name: "D", size: 33},
+    //     {name: "E", size: 18}
+    // ];
+    // example.sort((a, b) => {
+    //     return 0.5 - Math.random();
+    // });
+    // res.render('index', {example: example, location: null, blobs: blobs, structs: structs, generate_report: false});
+
+    // Use this in production
+    res.render('index', {example: null, location: null, blobs: blobs, structs: structs, generate_report: false});
 });
 
 router.post("/", function (req, res) {
-    console.log('-- POSTED');
+    //console.log('-- POSTED');
 
     try {
         let data = req.body.form;
@@ -35,6 +38,7 @@ router.post("/", function (req, res) {
         if (data) {
             let sum = 0;
             let sizes = []; // For index
+            let generate_report = false;
 
             // This filters out any empty rows, e.g. both customer name and data size is empty
             for (let i = data.length - 1; i >= 0; i--) {
@@ -42,35 +46,36 @@ router.post("/", function (req, res) {
                     let num = Number(data[i].size);
                     sum += num;
                     sizes.push((num) ? num : 0);
+                    generate_report = true;
                 } else {
                     data.splice(i, 1);
                 }
             }
 
-            console.log('Data size sum: ' + sum);
-            console.log(sizes);
+            //console.log('Data size sum: ' + sum);
+            //console.log(sizes);
 
-            console.log("SORTED: ");
+            //console.log("SORTED: ");
             data.sort(function (a, b) {
                 return b.size - a.size;
             });
-            console.log(data);
+            //console.log(data);
 
 
             let blobs = script.get_blob_count(sum);
-            console.log('--- Blobs:');
-            console.log(blobs);
+            //console.log('--- Blobs:');
+            //console.log(blobs);
 
             let structs = script.get_struct_count(sum, Number(req.body.location));
-            console.log('--- Structs:');
-            console.log(structs);
+            //console.log('--- Structs:');
+            //console.log(structs);
 
             res.render('index', {
                 example: data,
                 location: req.body.location,
                 blobs: blobs,
                 structs: structs,
-                generate_report: true
+                generate_report: generate_report
             });
         } else {
             res.render('index', {
@@ -93,7 +98,7 @@ router.post("/", function (req, res) {
 });
 
 router.post("/download", function (req, res) {
-    console.log('\n-- POSTED IN DOWNLOAD');
+    //console.log('\n-- POSTED IN DOWNLOAD');
 
     try {
         let data = req.body.form;
@@ -112,23 +117,23 @@ router.post("/download", function (req, res) {
                 }
             }
 
-            console.log('Data size sum: ' + sum);
-            console.log(sizes);
+            //console.log('Data size sum: ' + sum);
+            //console.log(sizes);
 
-            console.log("SORTED: ");
+            //console.log("SORTED: ");
             data.sort(function (a, b) {
                 return b.size - a.size;
             });
-            console.log(data);
+            //console.log(data);
 
 
             let blobs = script.get_blob_count(sum);
-            console.log('--- Blobs:');
-            console.log(blobs);
+            //console.log('--- Blobs:');
+            //console.log(blobs);
 
             let structs = script.get_struct_count(sum, Number(req.body.location));
-            console.log('--- Structs:');
-            console.log(structs);
+            //console.log('--- Structs:');
+            //console.log(structs);
 
             report_generator.generate_report({
                 table: data,

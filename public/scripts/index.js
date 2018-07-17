@@ -2,7 +2,7 @@ $(document).ready(() => {
 
     $("#add_row").click(function (e) {
         let table = $('#form_table');
-        console.log(table.find('tbody tr').length);
+        //console.log(table.find('tbody tr').length);
 
         table.find('tbody').append('<tr><td>' +
             '<input type="text" class="form-control" placeholder="Customer name" name="form[' + table.find('tbody tr').length + '][name]" value=""/>' +
