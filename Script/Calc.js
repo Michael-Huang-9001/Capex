@@ -27,7 +27,7 @@ function get_blob_count(sum) {
     let blob_total = sum * data_reduction_rate * blob_data_ratio;
     // console.log('Blob total: ' + blob_total);
     let blob_sets = Math.floor(blob_total / blob_size);
-    blob_sets += (blob_total % blob_size == 0) ? 0 : 1;
+    blob_sets += (blob_total % blob_size === 0) ? 0 : 1;
     blobs['sets'] = blob_sets;
     blobs['hosts'] = blob_sets * 2;
     return blobs;
@@ -50,7 +50,7 @@ function get_struct_count(sum, host_multiplier) {
     let struct_sets = Math.floor(structs_total / struct_size);
     struct_sets += (structs_total % struct_size === 0) ? 0 : 1;
     structs['sets'] = struct_sets;
-    structs['hosts'] = struct_sets * host_multiplier;
+    structs['hosts'] = struct_sets * ((host_multiplier == 'CAN' || host_multiplier == 'EU') ? 2 : 3);
     return structs;
 }
 

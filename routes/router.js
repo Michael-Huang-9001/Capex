@@ -63,7 +63,7 @@ router.post("/", function (req, res) {
             //console.log('--- Blobs:');
             //console.log(blobs);
 
-            let structs = script.get_struct_count(sum, Number(req.body.location));
+            let structs = script.get_struct_count(sum, req.body.location);
             //console.log('--- Structs:');
             //console.log(structs);
 
@@ -128,7 +128,7 @@ router.post("/download", function (req, res) {
             //console.log('--- Blobs:');
             //console.log(blobs);
 
-            let structs = script.get_struct_count(sum, Number(req.body.location));
+            let structs = script.get_struct_count(sum, req.body.location);
             //console.log('--- Structs:');
             //console.log(structs);
 
@@ -137,7 +137,7 @@ router.post("/download", function (req, res) {
                 blobs: blobs,
                 structs: structs,
                 sum: sum,
-                location: (Number(req.body.location) === 2) ? 'Frankfurt/Markham' : 'SC4'
+                location: req.body.location
             }, res);
 
             // res.download

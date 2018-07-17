@@ -8,13 +8,17 @@
 
         <div>
             <select name="location">
-                <option value="3">SC4</option>
-                <option value="2"
-                        <% if(location == 2) { %>
+                <option value="SC4">SC4</option>
+                <option value="EU"
+                        <% if (location == 'EU') { %>
                         selected
                         <% } %>
-                >Frankfurt/Markham
-                </option>
+                >EU</option>
+                <option value="CAN"
+                        <% if (location == 'CAN') { %>
+                        selected
+                        <% } %>
+                >CAN</option>
             </select>
             <button id="add_row" type="button" class="btn btn-primary">Add row</button>
             <button id="delete_row" type="button" class="btn btn-primary">Delete row</button>
