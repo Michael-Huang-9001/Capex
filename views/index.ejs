@@ -14,12 +14,14 @@
                         <% if (location == 'EU') { %>
                         selected
                         <% } %>
-                >EU</option>
+                >EU
+                </option>
                 <option value="CAN"
                         <% if (location == 'CAN') { %>
                         selected
                         <% } %>
-                >CAN</option>
+                >CAN
+                </option>
             </select>
             <button id="add_row" type="button" class="btn btn-primary">Add row</button>
             <button id="delete_row" type="button" class="btn btn-primary">Delete row</button>
@@ -78,6 +80,43 @@
 
         <fieldset>
             <legend>Results</legend>
+
+            <div>
+                <% if(total && index && index.table) { %>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Customer name</th>
+                        <th>Data size (TB)</th>
+                        <th>Data size (GB)</th>
+                        <th>Ingested (GB)</th>
+                        <th>Reduced index size (GB)</th>
+                        <th>250 GB space (VM)</th>
+                        <th>150 GB space (VM)</th>
+                        <th>Required space (GB)</th>
+                        <th>150 GB space remaining (VM)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for(let row of index.table) { %>
+                    <tr>
+                        <td><%= row.name %></td>
+                        <td><%= row.TB %></td>
+                        <td><%= row.GB %></td>
+                        <td><%= row.ingested %></td>
+                        <td><%= row.index %></td>
+                        <td><%= row.vm250_used %></td>
+                        <td><%= row.vm150_used %></td>
+                        <td><%= row.required_spaces %></td>
+                        <td><%= row.vm150_remaining %></td>
+                    </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+                <% } %>
+            </div>
+            <br>
+
             <div>
                 <% if(blobs) { %>
                 Blobs: <%= blobs.sets %> sets, <%= blobs.hosts %> hosts

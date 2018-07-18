@@ -6,9 +6,6 @@ const report_generator = require('../Script/ReportGenerator');
 
 // Entry point for the app startup, grabs customer list from Archiving Dashboard
 router.get("/", function (req, res) {
-    let blobs = {"sets": 0, "hosts": 0};
-    let structs = {"sets": 0, "hosts": 0};
-    let indices = {VMs: 0, sets: 0, hosts: 0, required_space_analysis: []};
 
     // For testing
     let example = [
@@ -24,7 +21,7 @@ router.get("/", function (req, res) {
     res.render('index', {example: example, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
 
     // Use this in production
-    // res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, generate_report: false});
+    // res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
 });
 
 router.post("/", function (req, res) {
@@ -35,7 +32,6 @@ router.post("/", function (req, res) {
 
         if (data) {
             let sum = 0;
-            let sizes = []; // For index
             let generate_report = false;
 
             //console.log("SORTED: ");
@@ -50,9 +46,7 @@ router.post("/", function (req, res) {
                     if (!data[i].size) {
                         data[i].size = 0;
                     } else {
-                        let num = Number(data[i].size);
-                        sum += num;
-                        sizes.push((num) ? num : 0);
+                        sum += Number(data[i].size);
                     }
                 } else {
                     data.splice(i, 1);
@@ -63,10 +57,6 @@ router.post("/", function (req, res) {
                 generate_report = true;
             }
 
-            //console.log('Data size sum: ' + sum);
-            sizes.reverse(); // The filtering loop goes in reverse
-            //console.log(sizes);
-
             let blobs = script.get_blob_count(sum);
             //console.log('--- Blobs:');
             //console.log(blobs);
@@ -75,9 +65,9 @@ router.post("/", function (req, res) {
             //console.log('--- Structs:');
             //console.log(structs);
 
-            let indices = script.get_index_count(sizes);
-            //console.log('--- Indices:');
-            //console.log(indices);
+            let indices = script.get_index_count(data);
+            // console.log('--- Indices:');
+            // console.log(indices);
 
             res.render('index', {
                 example: data,
@@ -95,6 +85,12 @@ router.post("/", function (req, res) {
         res.redirect("/");
     }
 });
+
+
+
+
+
+
 
 router.post("/download", function (req, res) {
     //console.log('-- POSTED IN DOWNLOAD');

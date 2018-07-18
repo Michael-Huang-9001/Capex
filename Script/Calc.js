@@ -1,3 +1,12 @@
+/**
+ * LIFT YOURSELF OFF OF YOUR FEET
+ * LET'S GET IT ONNNNNNNNN
+ *
+ * POOPITY SCOOP
+ *
+ * @type {number}
+ */
+
 const data_reduction_rate = 0.8;
 const TB_to_GB = 1000;
 
@@ -65,35 +74,48 @@ function get_struct_count(sum, host_multiplier) {
  * @param sum the total data size
  * @param sizes the list of data sizes individually
  */
-function get_index_count(sizes) {
-    if (!sizes.length) {
-        return {VMs: 0, sets: 0, hosts: 0, required_space_analysis: 0};
+function get_index_count(data) {
+    if (!data.length) {
+        return {VMs: 0, sets: 0, hosts: 0, required_space_analysis: 0, table: []};
     }
 
-    //let table = [];
+    let table = [];
 
     let vm250_used = 0;
     let vm150_used = 0;
     let vm150_remaining = 0;
     let required_index_VMs = 0;
-    let required_spaces = []; // Column G in Kaito's spreadsheet, seemingly unused.
 
-    for (let i = 0; i < sizes.length; i++) {
-        //let row = {};
-        let index_data_size = sizes[i] * TB_to_GB * data_reduction_rate * index_data_ratio; // TB to GB, then reduce.
+    for (let i = 0; i < data.length; i++) {
+        let form_row = data[i];
+
+        let table_row = {};
+        table_row.name = form_row.name;
+        table_row.TB = Number(form_row.size);
+        table_row.GB = table_row.TB * TB_to_GB;
+        table_row.ingested = table_row.GB * data_reduction_rate;
+        table_row.index = table_row.ingested * index_data_ratio;
+
+        let index_data_size = table_row.index; // TB to GB, then reduce.
 
         if (i === 0) {
             // Number of VMs using full 250 GB allowed, dictated by largest data size.
             vm250_used = Math.ceil(index_data_size / vm_data_allowed);
+            table_row.vm250_used = vm250_used;
+
             // The largest data size should not need any 150s.
             vm150_used = 0;
+            table_row.vm150_used = vm150_used;
+
             // Summing total 250GBs used, as 250 GB portions must be used before 150 GBs, considered head count.
             required_index_VMs += vm250_used;
             // Save number of 150 GB portions for subsequent use.
             vm150_remaining = vm250_used - vm150_used;
+            table_row.vm150_remaining = vm150_remaining;
         } else {
             // Use the minimum of remaining 150 GBs, or whatever # current_index_size / 150 GBs is.
             vm150_used = Math.min(vm150_remaining, Math.ceil(index_data_size / (vm_capacity - vm_data_allowed)));
+            table_row.vm150_used = vm150_used;
 
             // =IF(H2=0,ROUNDUP(D3/250,0),ROUNDUP(MAX(D3-F3*150,0)/250,0))
             if (vm150_remaining == 0) {
@@ -103,16 +125,20 @@ function get_index_count(sizes) {
                 // ROUNDUP(MAX(index_data_size - vm150_used*150,0)/250,0)
                 vm250_used = Math.ceil(Math.max(index_data_size - (vm150_used * (vm_capacity - vm_data_allowed)), 0) / vm_data_allowed);
             }
+            table_row.vm250_used = vm250_used;
 
             // =H2-F3+E3
             vm150_remaining = vm150_remaining - vm150_used + vm250_used;
+            table_row.vm150_remaining = vm150_remaining;
 
             // Summing all 250 GB portions used
             required_index_VMs += vm250_used;
         }
 
         // Required space = vm250_used * 250 GB + vm150_used * 150
-        required_spaces.push(vm250_used * vm_data_allowed + vm150_used * (vm_capacity - vm_data_allowed));
+        table_row.required_spaces = vm250_used * vm_data_allowed + vm150_used * (vm_capacity - vm_data_allowed);
+
+        table.push(table_row);
     }
 
     let required_index_sets = Math.ceil(required_index_VMs / index_set_per_VM);
@@ -122,7 +148,7 @@ function get_index_count(sizes) {
         VMs: required_index_VMs,
         sets: required_index_sets,
         hosts: required_index_hosts,
-        required_space_analysis: required_spaces
+        table: table
     };
 }
 
