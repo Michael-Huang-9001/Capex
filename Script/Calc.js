@@ -67,8 +67,10 @@ function get_struct_count(sum, host_multiplier) {
  */
 function get_index_count(sizes) {
     if (!sizes.length) {
-        return;
+        return {VMs: 0, sets: 0, hosts: 0, required_space_analysis: 0};
     }
+
+    //let table = [];
 
     let vm250_used = 0;
     let vm150_used = 0;
@@ -77,6 +79,7 @@ function get_index_count(sizes) {
     let required_spaces = []; // Column G in Kaito's spreadsheet, seemingly unused.
 
     for (let i = 0; i < sizes.length; i++) {
+        //let row = {};
         let index_data_size = sizes[i] * TB_to_GB * data_reduction_rate * index_data_ratio; // TB to GB, then reduce.
 
         if (i === 0) {

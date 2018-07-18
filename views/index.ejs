@@ -3,6 +3,7 @@
 <div class="container" style="text-align: center">
     <br>
     <h2>Capex Calculator</h2>
+    <br>
 
     <form id="form" autocomplete="off" action="/" method="POST">
 
@@ -53,6 +54,13 @@
 
             </tbody>
         </table>
+
+        <div>
+            <% if (total) { %>
+            <b>Total data size: <%= total %> TB</b>
+            <br><br>
+            <% } %>
+        </div>
 
 
         <button id="submit_form" type="submit" class="btn btn-primary">

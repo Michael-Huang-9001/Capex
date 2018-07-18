@@ -21,7 +21,7 @@ router.get("/", function (req, res) {
     example.sort((a, b) => {
         return 0.5 - Math.random();
     });
-    res.render('index', {example: example, location: null, blobs: null, structs: null, index: null, generate_report: false});
+    res.render('index', {example: example, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
 
     // Use this in production
     // res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, generate_report: false});
@@ -85,17 +85,11 @@ router.post("/", function (req, res) {
                 blobs: blobs,
                 structs: structs,
                 index: indices,
+                total: sum,
                 generate_report: generate_report
             });
         } else {
-            res.render('index', {
-                example: null,
-                location: null,
-                blobs: null,
-                structs: null,
-                index: null,
-                generate_report: false
-            });
+            res.redirect("/");
         }
     } catch (error) {
         res.redirect("/");
@@ -103,27 +97,15 @@ router.post("/", function (req, res) {
 });
 
 router.post("/download", function (req, res) {
-    //console.log('\n-- POSTED IN DOWNLOAD');
+    //console.log('-- POSTED IN DOWNLOAD');
 
     try {
         let data = req.body.form;
-        if (data && req.body.generate_report) {
+
+        if (data) {
             let sum = 0;
             let sizes = []; // For index
-
-            // This filters out any empty rows, e.g. both customer name and data size is empty
-            for (let i = data.length - 1; i >= 0; i--) {
-                if (data[i].name || data[i].size) {
-                    let num = Number(data[i].size);
-                    sum += num;
-                    sizes.push((num) ? num : 0);
-                } else {
-                    data.splice(i, 1);
-                }
-            }
-
-            //console.log('Data size sum: ' + sum);
-            //console.log(sizes);
+            let generate_report = false;
 
             //console.log("SORTED: ");
             data.sort(function (a, b) {
@@ -131,6 +113,24 @@ router.post("/download", function (req, res) {
             });
             //console.log(data);
 
+            // This filters out any empty rows, e.g. both customer name and data size is empty
+            for (let i = data.length - 1; i >= 0; i--) {
+                if (data[i].name || data[i].size) {
+                    if (!data[i].size) {
+                        data[i].size = 0;
+                    } else {
+                        let num = Number(data[i].size);
+                        sum += num;
+                        sizes.push((num) ? num : 0);
+                    }
+                } else {
+                    data.splice(i, 1);
+                }
+            }
+
+            //console.log('Data size sum: ' + sum);
+            sizes.reverse(); // The filtering loop goes in reverse
+            //console.log(sizes);
 
             let blobs = script.get_blob_count(sum);
             //console.log('--- Blobs:');
@@ -140,22 +140,20 @@ router.post("/download", function (req, res) {
             //console.log('--- Structs:');
             //console.log(structs);
 
+            let indices = script.get_index_count(sizes);
+            //console.log('--- Indices:');
+            //console.log(indices);
+
             report_generator.generate_report({
                 table: data,
                 blobs: blobs,
                 structs: structs,
+                index: indices,
                 sum: sum,
                 location: req.body.location
             }, res);
         } else {
-            res.render('index', {
-                example: data,
-                location: null,
-                blobs: null,
-                structs: null,
-                index: null,
-                generate_report: false
-            });
+            res.redirect("/");
         }
     } catch (error) {
         res.redirect("/");

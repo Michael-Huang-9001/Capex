@@ -37,15 +37,25 @@ async function generate_report(report_json, res) {
         doc.font('Times-New-Roman').text('Required total struct hosts: ' + report_json.structs.hosts);
         doc.font('Times-New-Roman').text(' ');
 
+        doc.font('Times-New-Roman').text('Required total index VMs: ' + report_json.index.VMs);
+        doc.font('Times-New-Roman').text('Required total index sets: ' + report_json.index.sets);
+        doc.font('Times-New-Roman').text('Required total index hosts: ' + report_json.index.hosts);
+        doc.font('Times-New-Roman').text(' ');
 
-        doc.font('Times-New-Roman').text('Breakdown:');
+
+        doc.font('Times-New-Roman').text('Breakdown for required number of hosts:');
 
         switch (report_json.location) {
+
+            // \u2192 is an arrow sign
+
+
             case 'CAN': {
                 // GOOD OLD CANADA
                 doc.font('Times-New-Roman').text('CAN' + ' \u2192 ' + 'MARK : BRA');
                 doc.font('Times-New-Roman').text('Blobs' + ' \u2192 ' + report_json.blobs.sets + ' : ' + report_json.blobs.sets);
                 doc.font('Times-New-Roman').text('Structs' + ' \u2192 ' + report_json.structs.sets + ' : ' + report_json.structs.sets);
+                doc.font('Times-New-Roman').text('Index' + ' \u2192 ' + report_json.index.sets + ' : ' + report_json.index.sets);
                 doc.font('Times-New-Roman').text(' ');
                 break;
             }
@@ -55,6 +65,7 @@ async function generate_report(report_json, res) {
                 doc.font('Times-New-Roman').text('EU' + ' \u2192 ' + 'FRA : AMS');
                 doc.font('Times-New-Roman').text('Blobs' + ' \u2192 ' + report_json.blobs.sets + ' : ' + report_json.blobs.sets);
                 doc.font('Times-New-Roman').text('Structs' + ' \u2192 ' + report_json.structs.sets + ' : ' + report_json.structs.sets);
+                doc.font('Times-New-Roman').text('Index' + ' \u2192 ' + report_json.index.sets + ' : ' + report_json.index.sets);
                 doc.font('Times-New-Roman').text(' ');
                 break;
             }
@@ -64,6 +75,7 @@ async function generate_report(report_json, res) {
                 doc.font('Times-New-Roman').text('SC4' + ' \u2192 ' + 'SC4 : UT7');
                 doc.font('Times-New-Roman').text('Blobs' + ' \u2192 ' + report_json.blobs.sets + ' : ' + report_json.blobs.sets);
                 doc.font('Times-New-Roman').text('Structs' + ' \u2192 ' + report_json.structs.sets * 2 + ' : ' + report_json.structs.sets);
+                doc.font('Times-New-Roman').text('Index' + ' \u2192 ' + report_json.index.sets + ' : ' + report_json.index.sets);
                 doc.font('Times-New-Roman').text(' ');
             }
         }
