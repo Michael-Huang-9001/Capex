@@ -66,16 +66,34 @@
         </a>
 
         <br>
+        <br>
 
         <fieldset>
             <legend>Results</legend>
             <div>
+                <% if(blobs) { %>
                 Blobs: <%= blobs.sets %> sets, <%= blobs.hosts %> hosts
+                <% } else { %>
+                Blobs: 0 sets, 0 hosts
+                <% } %>
             </div>
             <br>
 
             <div>
+                <% if(structs) { %>
                 Structs: <%= structs.sets %> sets, <%= structs.hosts %> hosts
+                <% } else { %>
+                Structs: 0 sets, 0 hosts
+                <% } %>
+            </div>
+            <br>
+
+            <div>
+                <% if(index) { %>
+                Index: <%= index.VMs %> VMs, <%= index.sets %> sets, <%= index.hosts %> hosts
+                <% } else { %>
+                Index: 0 VMs, 0 sets, 0 hosts
+                <% } %>
             </div>
             <br>
 

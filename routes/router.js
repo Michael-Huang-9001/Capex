@@ -8,22 +8,23 @@ const report_generator = require('../Script/ReportGenerator');
 router.get("/", function (req, res) {
     let blobs = {"sets": 0, "hosts": 0};
     let structs = {"sets": 0, "hosts": 0};
+    let indices = {VMs: 0, sets: 0, hosts: 0, required_space_analysis: []};
 
     // For testing
-    // let example = [
-    //     {name: "A", size: 200},
-    //     {name: "B", size: 67},
-    //     {name: "C", size: 45},
-    //     {name: "D", size: 33},
-    //     {name: "E", size: 18}
-    // ];
-    // example.sort((a, b) => {
-    //     return 0.5 - Math.random();
-    // });
-    // res.render('index', {example: example, location: null, blobs: blobs, structs: structs, generate_report: false});
+    let example = [
+        {name: "A", size: 200},
+        {name: "B", size: 67},
+        {name: "C", size: 45},
+        {name: "D", size: 33},
+        {name: "E", size: 18}
+    ];
+    example.sort((a, b) => {
+        return 0.5 - Math.random();
+    });
+    res.render('index', {example: example, location: null, blobs: null, structs: null, index: null, generate_report: false});
 
     // Use this in production
-    res.render('index', {example: null, location: null, blobs: blobs, structs: structs, generate_report: false});
+    // res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, generate_report: false});
 });
 
 router.post("/", function (req, res) {
@@ -37,27 +38,34 @@ router.post("/", function (req, res) {
             let sizes = []; // For index
             let generate_report = false;
 
-            // This filters out any empty rows, e.g. both customer name and data size is empty
-            for (let i = data.length - 1; i >= 0; i--) {
-                if (data[i].name || data[i].size) {
-                    let num = Number(data[i].size);
-                    sum += num;
-                    sizes.push((num) ? num : 0);
-                    generate_report = true;
-                } else {
-                    data.splice(i, 1);
-                }
-            }
-
-            //console.log('Data size sum: ' + sum);
-            //console.log(sizes);
-
             //console.log("SORTED: ");
             data.sort(function (a, b) {
                 return b.size - a.size;
             });
             //console.log(data);
 
+            // This filters out any empty rows, e.g. both customer name and data size is empty
+            for (let i = data.length - 1; i >= 0; i--) {
+                if (data[i].name || data[i].size) {
+                    if (!data[i].size) {
+                        data[i].size = 0;
+                    } else {
+                        let num = Number(data[i].size);
+                        sum += num;
+                        sizes.push((num) ? num : 0);
+                    }
+                } else {
+                    data.splice(i, 1);
+                }
+            }
+
+            if (sum > 0) {
+                generate_report = true;
+            }
+
+            //console.log('Data size sum: ' + sum);
+            sizes.reverse(); // The filtering loop goes in reverse
+            //console.log(sizes);
 
             let blobs = script.get_blob_count(sum);
             //console.log('--- Blobs:');
@@ -67,30 +75,30 @@ router.post("/", function (req, res) {
             //console.log('--- Structs:');
             //console.log(structs);
 
+            let indices = script.get_index_count(sizes);
+            //console.log('--- Indices:');
+            //console.log(indices);
+
             res.render('index', {
                 example: data,
                 location: req.body.location,
                 blobs: blobs,
                 structs: structs,
+                index: indices,
                 generate_report: generate_report
             });
         } else {
             res.render('index', {
-                example: data,
+                example: null,
                 location: null,
-                blobs: {sets: 0, hosts: 0},
-                structs: {sets: 0, hosts: 0},
+                blobs: null,
+                structs: null,
+                index: null,
                 generate_report: false
             });
         }
     } catch (error) {
-        res.render('index', {
-            example: req.body.form,
-            location: null,
-            blobs: {sets: 0, hosts: 0},
-            structs: {sets: 0, hosts: 0},
-            generate_report: false
-        });
+        res.redirect("/");
     }
 });
 
@@ -139,25 +147,18 @@ router.post("/download", function (req, res) {
                 sum: sum,
                 location: req.body.location
             }, res);
-
-            // res.download
         } else {
             res.render('index', {
                 example: data,
                 location: null,
-                blobs: {sets: 0, hosts: 0},
-                structs: {sets: 0, hosts: 0},
+                blobs: null,
+                structs: null,
+                index: null,
                 generate_report: false
             });
         }
     } catch (error) {
-        res.render('index', {
-            example: req.body.form,
-            location: null,
-            blobs: {sets: 0, hosts: 0},
-            structs: {sets: 0, hosts: 0},
-            generate_report: false
-        });
+        res.redirect("/");
     }
 });
 
