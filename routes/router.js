@@ -4,6 +4,8 @@ const router = express.Router();
 const script = require('../Script/Calc');
 const report_generator = require('../Script/ReportGenerator');
 
+const nodemailer = require('nodemailer');
+
 // Entry point for the app startup, grabs customer list from Archiving Dashboard
 router.get("/", function (req, res) {
 
@@ -18,7 +20,15 @@ router.get("/", function (req, res) {
     example.sort((a, b) => {
         return 0.5 - Math.random();
     });
-    res.render('index', {example: example, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
+    res.render('index', {
+        example: example,
+        location: null,
+        blobs: null,
+        structs: null,
+        index: null,
+        total: 0,
+        generate_report: false
+    });
 
     // Use this in production
     // res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
@@ -46,7 +56,7 @@ router.post("/", function (req, res) {
                     if (!data[i].size) {
                         data[i].size = 0;
                     } else {
-                        sum += Number(data[i].size);
+                        sum += Math.ceil(Number(data[i].size));
                     }
                 } else {
                     data.splice(i, 1);
@@ -86,22 +96,14 @@ router.post("/", function (req, res) {
     }
 });
 
-
-
-
-
-
-
 router.post("/download", function (req, res) {
-    //console.log('-- POSTED IN DOWNLOAD');
+    console.log('-- POSTED IN DOWNLOAD');
 
     try {
         let data = req.body.form;
 
         if (data) {
             let sum = 0;
-            let sizes = []; // For index
-            let generate_report = false;
 
             //console.log("SORTED: ");
             data.sort(function (a, b) {
@@ -115,9 +117,7 @@ router.post("/download", function (req, res) {
                     if (!data[i].size) {
                         data[i].size = 0;
                     } else {
-                        let num = Number(data[i].size);
-                        sum += num;
-                        sizes.push((num) ? num : 0);
+                        sum += Number(data[i].size);
                     }
                 } else {
                     data.splice(i, 1);
@@ -125,7 +125,6 @@ router.post("/download", function (req, res) {
             }
 
             //console.log('Data size sum: ' + sum);
-            sizes.reverse(); // The filtering loop goes in reverse
             //console.log(sizes);
 
             let blobs = script.get_blob_count(sum);
@@ -136,9 +135,9 @@ router.post("/download", function (req, res) {
             //console.log('--- Structs:');
             //console.log(structs);
 
-            let indices = script.get_index_count(sizes);
-            //console.log('--- Indices:');
-            //console.log(indices);
+            let indices = script.get_index_count(data);
+            console.log('--- Indices:');
+            console.log(indices);
 
             report_generator.generate_report({
                 table: data,
@@ -156,13 +155,35 @@ router.post("/download", function (req, res) {
     }
 });
 
-// 30TB data needs:
-//     4 host x Blob
-// 2 host x NGSS
-// 24 VM x Index => ( 4 host x HDD or 8 x regular)
-//
-// this requires:
-//     6 host x R530
-// 8 host x regular R730
+router.post("/email", function (req, res) {
+    // create reusable transporter object using the default SMTP transport
+    var transporter = nodemailer.createTransport({
+        type: 'smtp',
+        host: 'smtp.us.proofpoint.com',
+        port: 25,
+        secure: false,
+        logger: true,
+        debug: true,
+    });
+
+    // setup e-mail data with unicode symbols
+    var mailOptions = {
+        from: '"Capex Calculator" <capexcalculator@proofpoint.com>', // sender address
+        to: 'mihuang@proofpoint.com', // list of receivers
+        subject: 'Test subject', // Subject line
+        text: 'text content', // plaintext body
+        html: '<b>Hello world ?</b>' +
+        '<br>' +
+        '<b>bruh</b>' // html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            return console.log(error);
+        }
+        console.log('Message sent: ' + info.response);
+    });
+});
 
 module.exports = router;
