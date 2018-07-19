@@ -57,7 +57,7 @@
             </tbody>
         </table>
 
-        <div>
+        <div id="total_size">
             <% if (total) { %>
             <b>Total data size: <%= total %> TB</b>
             <br><br>
@@ -117,25 +117,23 @@
             </div>
             <br>
 
-            <div>
+            <div id="results_text">
                 <% if(blobs) { %>
                 Blobs: <%= blobs.sets %> sets, <%= blobs.hosts %> hosts
                 <% } else { %>
                 Blobs: 0 sets, 0 hosts
                 <% } %>
-            </div>
-            <br>
+                <br>
+                <br>
 
-            <div>
                 <% if(structs) { %>
                 Structs: <%= structs.sets %> sets, <%= structs.hosts %> hosts
                 <% } else { %>
                 Structs: 0 sets, 0 hosts
                 <% } %>
-            </div>
-            <br>
+                <br>
+                <br>
 
-            <div>
                 <% if(index) { %>
                 Index: <%= index.VMs %> VMs, <%= index.sets %> sets, <%= index.hosts %> hosts
                 <% } else { %>
@@ -153,12 +151,24 @@
                         <% } %>
                 >Generate PDF
                 </button>
-                <button id="email_button" type="button" class="btn btn-primary"
-                        <% if(!generate_report) { %>
-                        hidden disabled
-                        <% } %>
-                >SEND EMAIL
-                </button>
+                <br>
+                <br>
+
+                <% if(generate_report) { %>
+                <div>
+                    <input id="email" style="border-style: solid !important; width: auto; height: auto;" type="email" name="email"
+                            <% if(!generate_report) { %>
+                           hidden disabled
+                            <% } %>
+                    />
+                    <button id="email_button" type="button" class="btn btn-primary"
+                            <% if(!generate_report) { %>
+                            hidden disabled
+                            <% } %>
+                    >SEND EMAIL
+                    </button>
+                </div>
+                <% } %>
             </div>
         </fieldset>
     </form>

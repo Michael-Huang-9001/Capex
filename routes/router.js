@@ -10,28 +10,28 @@ const nodemailer = require('nodemailer');
 router.get("/", function (req, res) {
 
     // For testing
-    let example = [
-        {name: "A", size: 200},
-        {name: "B", size: 67},
-        {name: "C", size: 45},
-        {name: "D", size: 33},
-        {name: "E", size: 18}
-    ];
-    example.sort((a, b) => {
-        return 0.5 - Math.random();
-    });
-    res.render('index', {
-        example: example,
-        location: null,
-        blobs: null,
-        structs: null,
-        index: null,
-        total: 0,
-        generate_report: false
-    });
+    // let example = [
+    //     {name: "A", size: 200},
+    //     {name: "B", size: 67},
+    //     {name: "C", size: 45},
+    //     {name: "D", size: 33},
+    //     {name: "E", size: 18}
+    // ];
+    // example.sort((a, b) => {
+    //     return 0.5 - Math.random();
+    // });
+    // res.render('index', {
+    //     example: example,
+    //     location: null,
+    //     blobs: null,
+    //     structs: null,
+    //     index: null,
+    //     total: 0,
+    //     generate_report: false
+    // });
 
     // Use this in production
-    // res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
+    res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
 });
 
 router.post("/", function (req, res) {
@@ -136,8 +136,8 @@ router.post("/download", function (req, res) {
             //console.log(structs);
 
             let indices = script.get_index_count(data);
-            console.log('--- Indices:');
-            console.log(indices);
+            //console.log('--- Indices:');
+            //console.log(indices);
 
             report_generator.generate_report({
                 table: data,
@@ -157,11 +157,11 @@ router.post("/download", function (req, res) {
 
 router.post("/email", function (req, res) {
     try {
-        console.log('POSTED IN EMAIL');
+        //console.log('POSTED IN EMAIL');
         //console.log(req.body);
 
         // create reusable transporter object using the default SMTP transport
-        var transporter = nodemailer.createTransport({
+        let transporter = nodemailer.createTransport({
             type: 'smtp',
             host: 'smtp.us.proofpoint.com',
             port: 25,
@@ -171,28 +171,30 @@ router.post("/email", function (req, res) {
         });
 
         // setup e-mail data with unicode symbols
-        var mailOptions = {
+        let mail_contents = {
             from: '"Capex Calculator" <capexcalculator@proofpoint.com>', // sender address
-            to: 'mihuang@proofpoint.com', // list of receivers
+            to: req.body.email, // list of receivers
+            //to: 'mihuang@proofpoint.com, hkaito@proofpoint.com', // list of receivers
             subject: '[' + new Date().toLocaleDateString() + '] Capex Calculation', // Subject line
             text: '', // plaintext body
             html: 'Location: ' + req.body.location +
             '<br><br><table border="1">' + req.body.form +
-            '</table><br><br><table border="1">' + req.body.results +
-            '</table>'// html body
+            '</table><br>' + req.body.total_size + '<br><table border="1">' + req.body.results +
+            '</table><br>' + req.body.results_text // html body
         };
 
         // send mail with defined transport object
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter.sendMail(mail_contents, function (error, info) {
             if (error) {
                 console.log(error);
+                res.end(JSON.stringify({message: error.message, status: 200}));
             } else {
                 console.log('Message sent: ' + info.response);
-                res.end(JSON.stringify({success: "Email sent.", status: 200}));
+                res.end(JSON.stringify({message: "Email sent to " + req.body.email + ".", status: 200}));
             }
         });
     } catch (error) {
-        res.end(JSON.stringify({success: "Email not sent.", status: 200}));
+        res.end(JSON.stringify({message: "Email not sent.", status: 200}));
     }
 });
 

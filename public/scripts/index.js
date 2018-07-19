@@ -33,13 +33,17 @@ $(document).ready(() => {
             url: window.location + 'email',
             dataType: 'json',
             data: {
+                email: form.find('#email').val(),
                 location: form.find('#location').val(),
-                form: form.find('#form_table').html(),
-                results: form.find('#results_table').html()
+                form: form.find('#form_table').html().replace(/type="number"/g, 'type="text"'),
+                // strips all input numbers for older versions of outlook
+                total_size: form.find('#total_size').html(),
+                results: form.find('#results_table').html(),
+                results_text: form.find('#results_text').html()
             },
             success: function (res) {
                 if (res.status == 200) {
-                    alert(res.success);
+                    alert(res.message);
                 } else {
                     alert("Email not sent.");
                 }
