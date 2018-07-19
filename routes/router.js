@@ -156,34 +156,44 @@ router.post("/download", function (req, res) {
 });
 
 router.post("/email", function (req, res) {
-    // create reusable transporter object using the default SMTP transport
-    var transporter = nodemailer.createTransport({
-        type: 'smtp',
-        host: 'smtp.us.proofpoint.com',
-        port: 25,
-        secure: false,
-        logger: true,
-        debug: true,
-    });
+    try {
+        console.log('POSTED IN EMAIL');
+        //console.log(req.body);
 
-    // setup e-mail data with unicode symbols
-    var mailOptions = {
-        from: '"Capex Calculator" <capexcalculator@proofpoint.com>', // sender address
-        to: 'mihuang@proofpoint.com', // list of receivers
-        subject: 'Test subject', // Subject line
-        text: 'text content', // plaintext body
-        html: '<b>Hello world ?</b>' +
-        '<br>' +
-        '<b>bruh</b>' // html body
-    };
+        // create reusable transporter object using the default SMTP transport
+        var transporter = nodemailer.createTransport({
+            type: 'smtp',
+            host: 'smtp.us.proofpoint.com',
+            port: 25,
+            secure: false,
+            logger: false,
+            debug: false,
+        });
 
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            return console.log(error);
-        }
-        console.log('Message sent: ' + info.response);
-    });
+        // setup e-mail data with unicode symbols
+        var mailOptions = {
+            from: '"Capex Calculator" <capexcalculator@proofpoint.com>', // sender address
+            to: 'mihuang@proofpoint.com', // list of receivers
+            subject: '[' + new Date().toLocaleDateString() + '] Capex Calculation', // Subject line
+            text: '', // plaintext body
+            html: 'Location: ' + req.body.location +
+            '<br><br><table border="1">' + req.body.form +
+            '</table><br><br><table border="1">' + req.body.results +
+            '</table>'// html body
+        };
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Message sent: ' + info.response);
+                res.end(JSON.stringify({success: "Email sent.", status: 200}));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({success: "Email not sent.", status: 200}));
+    }
 });
 
 module.exports = router;

@@ -19,4 +19,36 @@ $(document).ready(() => {
             table.find('tbody tr:last-child').remove();
         }
     });
+
+    $("#email_button").click(function (e) {
+        // alert(window.location);
+        let form = $("#form");
+        // console.log(form.find('#location').val());
+        // console.log(form.find('#form_table').html());
+        // console.log(form.find('#results_table').html());
+
+        let json = {
+            type: "POST",
+            timeout: 5000,
+            url: window.location + 'email',
+            dataType: 'json',
+            data: {
+                location: form.find('#location').val(),
+                form: form.find('#form_table').html(),
+                results: form.find('#results_table').html()
+            },
+            success: function (res) {
+                if (res.status == 200) {
+                    alert(res.success);
+                } else {
+                    alert("Email not sent.");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('An error has occurred when sending the email.');
+            }
+        };
+
+        $.ajax(json);
+    })
 });

@@ -8,7 +8,7 @@
     <form id="form" autocomplete="off" action="/" method="POST">
 
         <div>
-            <select name="location">
+            <select name="location" id="location">
                 <option value="SC4">SC4</option>
                 <option value="EU"
                         <% if (location == 'EU') { %>
@@ -83,7 +83,7 @@
 
             <div>
                 <% if(total && index && index.table) { %>
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="results_table">
                     <thead>
                     <tr>
                         <th>Customer name</th>
@@ -153,14 +153,14 @@
                         <% } %>
                 >Generate PDF
                 </button>
+                <button id="email_button" type="button" class="btn btn-primary"
+                        <% if(!generate_report) { %>
+                        hidden disabled
+                        <% } %>
+                >SEND EMAIL
+                </button>
             </div>
         </fieldset>
-    </form>
-
-    <form action="/email" method="POST">
-        <button type="submit">
-            SEND EMAIL
-        </button>
     </form>
 </div>
 
