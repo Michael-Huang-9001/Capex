@@ -75,7 +75,7 @@ router.post("/", function (req, res) {
             //console.log('--- Structs:');
             //console.log(structs);
 
-            let indices = script.get_index_count(data);
+            let indices = script.get_index_count(data, req.body.location);
             // console.log('--- Indices:');
             // console.log(indices);
 
@@ -135,7 +135,7 @@ router.post("/download", function (req, res) {
             //console.log('--- Structs:');
             //console.log(structs);
 
-            let indices = script.get_index_count(data);
+            let indices = script.get_index_count(data, req.body.location);
             //console.log('--- Indices:');
             //console.log(indices);
 

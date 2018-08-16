@@ -1,10 +1,8 @@
 /**
- * LIFT YOURSELF UP ON YOUR FEET
+ * LIFT YOURSELF UP OFF YOUR FEET
  * LET'S GET IT ONNNNNNNNN
  *
  * POOPITY SCOOP
- *
- * @type {number}
  */
 
 const data_reduction_rate = 0.8;
@@ -25,7 +23,8 @@ const struct_hosts_per_set_SC4 = 3;
 const vm_data_allowed = 250; // 250 GB per VM
 const vm_capacity = 400; // 400 GB max
 const index_data_ratio = 0.25;
-const index_set_per_VM = 15;
+const index_set_per_VM_US = 15; // SC4 only
+const index_set_per_VM_EU = 7; // EU/MARK only
 const index_hosts_per_set = 2;
 
 /**
@@ -74,7 +73,7 @@ function get_struct_count(sum, host_multiplier) {
  * @param sum the total data size
  * @param sizes the list of data sizes individually
  */
-function get_index_count(data) {
+function get_index_count(data, host_multiplier) {
     if (!data.length) {
         return {VMs: 0, sets: 0, hosts: 0, required_space_analysis: 0, table: []};
     }
@@ -141,7 +140,8 @@ function get_index_count(data) {
         table.push(table_row);
     }
 
-    let required_index_sets = Math.ceil(required_index_VMs / index_set_per_VM);
+    let required_index_sets = Math.ceil(required_index_VMs / 
+        ((host_multiplier == 'CAN' || host_multiplier == 'EU') ? index_set_per_VM_EU : index_set_per_VM_US));
     let required_index_hosts = required_index_sets * index_hosts_per_set;
 
     return {
