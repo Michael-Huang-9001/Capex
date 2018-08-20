@@ -1,6 +1,7 @@
 let row_count = 1;
 
 $(document).ready(() => {
+    row_count = $('#form_table > tbody > tr').length;
 
     $("#add_row").click(function (e) {
         let table = $('#form_table');
@@ -62,5 +63,7 @@ $(document).ready(() => {
 });
 
 function delete_row(row) {
-    $(row).parent().parent().remove();
+    if ($('#form_table > tbody > tr').length > 1) {
+        $(row).parent().parent().remove();
+    }
 }
