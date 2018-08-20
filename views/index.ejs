@@ -6,7 +6,6 @@
     <br>
 
     <form id="form" autocomplete="off" action="./" method="POST">
-
         <div>
             <select name="location" id="location">
                 <option value="SC4">SC4</option>
@@ -120,7 +119,7 @@
             </div>
             <br>
 
-            <div id="results_text">
+            <div>
                 <% if(blobs) { %>
                 Blobs: <%= blobs.sets %> sets, <%= blobs.hosts %> hosts
                 <% } else { %>
@@ -144,6 +143,33 @@
                 <% } %>
             </div>
             <br>
+
+            <% if(blobs && structs && index) { %>
+            <legend>Cost</legend>
+            <div>
+                    <% if(blobs) { %>
+                    Blobs: <%= blobs.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="blob_multiplier" type="number" value="20" onkeyup="calc_cost('<%= blobs.hosts %>', this, '#blob_cost');"> / unit = <span id="blob_cost"></span>
+                    <% } %>
+                    <br>
+                    <br>
+    
+                    <% if(structs) { %>
+                    Structs: <%= structs.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="struct_multiplier" type="number" value="20" onkeyup="calc_cost('<%= structs.hosts %>', this, '#struct_cost');"> / unit = <span id="struct_cost"></span>
+                    <% } %>
+                    <br>
+                    <br>
+    
+                    <% if(index) { %>
+                    Index: <%= index.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="index_multiplier" type="number" value="20" onkeyup="calc_cost('<%= index.hosts %>', this, '#index_cost');"> / unit = <span id="index_cost"></span>
+                    <% } %>
+                    <br>
+                    <br>
+
+                    Estimated total cost: <span id="total_cost"></span>
+                </div>
+                <br>
+            <% } %>
+            
 
             <div>
                 <input type="text" hidden value="<%= generate_report %>" name="generate_report"/>
@@ -180,3 +206,18 @@
 <% include partials/footer %>
 
 <script type="text/javascript" src="./scripts/index.js"></script>
+<script>
+    $(document).ready(function () {
+        calc_cost('<%= (blobs) ? blobs.hosts : 0 %>', "#blob_multiplier", '#blob_cost');
+        calc_cost('<%= (structs) ? structs.hosts : 0 %>', "#struct_multiplier", '#struct_cost');
+        calc_cost('<%= (index) ? index.hosts : 0 %>', '#index_multiplier', '#index_cost');
+
+        // $("#blob_multiplier").keyup(calc_cost('<%= (blobs) ? blobs.hosts : 0 %>', "#blob_multiplier", '#blob_cost'));
+        // $('#struct_multiplier').keyup(calc_cost('<%= (structs) ? structs.hosts : 0 %>', "#struct_multiplier", '#struct_cost'));
+        // $('#index_cost').keyup(calc_cost('<%= (index) ? index.hosts : 0 %>', '#index_multiplier', '#index_cost'));
+
+        // $("#blob_multiplier").click(calc_cost('<%= (blobs) ? blobs.hosts : 0 %>', "#blob_multiplier", '#blob_cost'));
+        // $('#struct_multiplier').click(calc_cost('<%= (structs) ? structs.hosts : 0 %>', "#struct_multiplier", '#struct_cost'));
+        // $('#index_cost').click(calc_cost('<%= (index) ? index.hosts : 0 %>', '#index_multiplier', '#index_cost'));
+    });
+</script>

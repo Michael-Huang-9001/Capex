@@ -6,12 +6,14 @@ const expressSanitizer = require("express-sanitizer");
 const app = express();
 const helmet = require('helmet');
 const comp = require('compression');
+const favicon = require('serve-favicon');
 
 // APP CONFIGURATION
 // app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use(helmet());
 app.use(comp());
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 // set so we don't have to type .ejs all the time when routing
 app.set("view engine", "ejs");

@@ -10,28 +10,28 @@ const nodemailer = require('nodemailer');
 router.get("/", function (req, res) {
 
     // For testing
-    // let example = [
-    //     {name: "A", size: 200},
-    //     {name: "B", size: 67},
-    //     {name: "C", size: 45},
-    //     {name: "D", size: 33},
-    //     {name: "E", size: 18}
-    // ];
-    // example.sort((a, b) => {
-    //     return 0.5 - Math.random();
-    // });
-    // res.render('index', {
-    //     example: example,
-    //     location: null,
-    //     blobs: null,
-    //     structs: null,
-    //     index: null,
-    //     total: 0,
-    //     generate_report: false
-    // });
+    let example = [
+        {name: "A", size: 200},
+        {name: "B", size: 67},
+        {name: "C", size: 45},
+        {name: "D", size: 33},
+        {name: "E", size: 18}
+    ];
+    example.sort((a, b) => {
+        return 0.5 - Math.random();
+    });
+    res.render('index', {
+        example: example,
+        location: null,
+        blobs: null,
+        structs: null,
+        index: null,
+        total: 0,
+        generate_report: false
+    });
 
     // Use this in production
-    res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
+    // res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
 });
 
 router.post("/", function (req, res) {

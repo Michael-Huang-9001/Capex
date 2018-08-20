@@ -59,11 +59,19 @@ $(document).ready(() => {
         };
 
         $.ajax(json);
-    })
+    });
+
 });
 
 function delete_row(row) {
     if ($('#form_table > tbody > tr').length > 1) {
         $(row).parent().parent().remove();
     }
+}
+
+function calc_cost(hosts, input, id) {
+    //alert('Calc called')
+    $(id).html(hosts * $(input).val());
+    $('#total_cost').text(Number($('#blob_cost').text()) + Number($('#struct_cost').text()) + Number(Number($('#index_cost').text())));
+    //alert(Number($('#blob_cost').text()) + Number($('#struct_cost').text()) + Number(Number($('#index_cost').text())));
 }
