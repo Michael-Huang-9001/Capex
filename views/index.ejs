@@ -33,6 +33,7 @@
             <tr>
                 <th>Customer name</th>
                 <th>Data size (TB)</th>
+                <th></th>
             </tr>
             </thead>
 
@@ -44,6 +45,7 @@
                            value="<%= example[i].name %>"/></td>
                 <td><input type="number" class="form-control" placeholder="Data size" min="0" step="0.01"
                            name="form[<%= i %>][size]" value="<%= example[i].size %>"/></td>
+                <td><i class="fa fa-trash" aria-hidden="true" onclick='delete_row(this);'></i></td>
             </tr>
             <% } } else { %>
             <tr>
@@ -51,6 +53,7 @@
                            value=""/></td>
                 <td><input type="number" class="form-control" placeholder="Data size" min="0" step="0.01"
                            name="form[0][size]" value=""/></td>
+                <td><i class="fa fa-trash" aria-hidden="true" onclick="delete_row(this);"></i></td>
             </tr>
             <% } %>
 

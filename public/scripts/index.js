@@ -1,3 +1,5 @@
+let row_count = 1;
+
 $(document).ready(() => {
 
     $("#add_row").click(function (e) {
@@ -5,11 +7,13 @@ $(document).ready(() => {
         //console.log(table.find('tbody tr').length);
 
         table.find('tbody').append('<tr><td>' +
-            '<input type="text" class="form-control" placeholder="Customer name" name="form[' + table.find('tbody tr').length + '][name]" value=""/>' +
+            '<input type="text" class="form-control" placeholder="Customer name" name="form[' + row_count + '][name]" value=""/>' +
             '</td>' +
             '<td>' +
-            '<input type="number" class="form-control" placeholder="Data size" min="0" step="0.01" name="form[' + table.find('tbody tr').length + '][size]" value=""/>' +
-            '</td></tr>');
+            '<input type="number" class="form-control" placeholder="Data size" min="0" step="0.01" name="form[' + row_count++ + '][size]" value=""/>' +
+            '</td>' +
+            '<td><i class="fa fa-trash" aria-hidden="true" onclick="delete_row(this);"></i></td>' +
+            '</tr>');
     });
 
     $("#delete_row").click(function (e) {
@@ -56,3 +60,7 @@ $(document).ready(() => {
         $.ajax(json);
     })
 });
+
+function delete_row(row) {
+    $(row).parent().parent().remove();
+}

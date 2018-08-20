@@ -17,3 +17,11 @@ textarea {
 .container {
     max-width: 60% !important;
 }
+
+.fa.fa-trash {
+    color: black
+}
+  
+.fa.fa-trash:hover {
+    color: red;
+}
