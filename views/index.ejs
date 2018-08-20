@@ -147,21 +147,15 @@
             <% if(blobs && structs && index) { %>
             <legend>Cost</legend>
             <div>
-                    <% if(blobs) { %>
-                    Blobs: <%= blobs.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="blob_multiplier" type="number" value="20" onkeyup="calc_cost('<%= blobs.hosts %>', this, '#blob_cost');"> / unit = <span id="blob_cost"></span>
-                    <% } %>
+                    Blobs: <%= blobs.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="blob_multiplier" type="number" min="0" value="20" onkeyup="calc_cost('<%= blobs.hosts %>', this, '#blob_cost');"> / unit = <span id="blob_cost"></span>
                     <br>
                     <br>
     
-                    <% if(structs) { %>
-                    Structs: <%= structs.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="struct_multiplier" type="number" value="20" onkeyup="calc_cost('<%= structs.hosts %>', this, '#struct_cost');"> / unit = <span id="struct_cost"></span>
-                    <% } %>
+                    Structs: <%= structs.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="struct_multiplier" type="number"  min="0" value="20" onkeyup="calc_cost('<%= structs.hosts %>', this, '#struct_cost');"> / unit = <span id="struct_cost"></span>
                     <br>
                     <br>
     
-                    <% if(index) { %>
-                    Index: <%= index.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="index_multiplier" type="number" value="20" onkeyup="calc_cost('<%= index.hosts %>', this, '#index_cost');"> / unit = <span id="index_cost"></span>
-                    <% } %>
+                    Index: <%= index.hosts %> hosts ✕ <input style="border-style: solid !important; width: 100px; height: auto; text-align: center;" id="index_multiplier" type="number" min="0" value="20" onkeyup="calc_cost('<%= index.hosts %>', this, '#index_cost');"> / unit = <span id="index_cost"></span>
                     <br>
                     <br>
 
