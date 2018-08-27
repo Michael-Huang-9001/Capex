@@ -61,6 +61,9 @@ $(document).ready(() => {
         $.ajax(json);
     });
 
+    $('#location').change(function () {
+        $('#submit_form').click();
+    })
 });
 
 function delete_row(row) {
@@ -71,7 +74,9 @@ function delete_row(row) {
 
 function calc_cost(hosts, input, id) {
     //alert('Calc called')
-    $(id).html(hosts * $(input).val());
-    $('#total_cost').text(Number($('#blob_cost').text()) + Number($('#struct_cost').text()) + Number(Number($('#index_cost').text())));
+    $(id).html(Math.round(hosts * $(input).val() * 100) / 100);
+    $('#total_cost').text(Math.round((Number($('#blob_cost').text()) + Number($('#struct_cost').text()) + Number($('#index_cost').text())) * 100) / 100);
+
+    //$('#total_cost').text(Number($('#blob_cost').text()) + Number($('#struct_cost').text()) + Number($('#index_cost').text()));
     //alert(Number($('#blob_cost').text()) + Number($('#struct_cost').text()) + Number(Number($('#index_cost').text())));
 }

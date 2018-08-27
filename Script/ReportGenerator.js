@@ -52,30 +52,30 @@ async function generate_report(report_json, res) {
 
             case 'CAN': {
                 // GOOD OLD CANADA
-                doc.font('Times-New-Roman').text('CAN' + ' \u2192 ' + 'MARK : BRA');
-                doc.font('Times-New-Roman').text('Blobs' + ' \u2192 ' + report_json.blobs.sets + ' : ' + report_json.blobs.sets);
-                doc.font('Times-New-Roman').text('Structs' + ' \u2192 ' + report_json.structs.sets + ' : ' + report_json.structs.sets);
-                doc.font('Times-New-Roman').text('Index' + ' \u2192 ' + report_json.index.sets + ' : ' + report_json.index.sets);
+                doc.font('Times-New-Roman').text('CAN ' + 'MARK : BRA');
+                doc.font('Times-New-Roman').text('Blobs: ' + report_json.blobs.sets + ' (MARK) : ' + report_json.blobs.sets + ' (BRA)');
+                doc.font('Times-New-Roman').text('Structs: ' + report_json.structs.sets + ' (MARK) : ' + report_json.structs.sets + ' (BRA)');
+                doc.font('Times-New-Roman').text('Index: ' + report_json.index.sets + ' (MARK) : ' + report_json.index.sets + ' (BRA)');
                 doc.font('Times-New-Roman').text(' ');
                 break;
             }
 
             case 'EU': {
                 // EU
-                doc.font('Times-New-Roman').text('EU' + ' \u2192 ' + 'FRA : AMS');
-                doc.font('Times-New-Roman').text('Blobs' + ' \u2192 ' + report_json.blobs.sets + ' : ' + report_json.blobs.sets);
-                doc.font('Times-New-Roman').text('Structs' + ' \u2192 ' + report_json.structs.sets + ' : ' + report_json.structs.sets);
-                doc.font('Times-New-Roman').text('Index' + ' \u2192 ' + report_json.index.sets + ' : ' + report_json.index.sets);
+                doc.font('Times-New-Roman').text('EU: ' + 'FRA : AMS');
+                doc.font('Times-New-Roman').text('Blobs: ' + report_json.blobs.sets + ' (FRA) : ' + report_json.blobs.sets + ' (AMS)');
+                doc.font('Times-New-Roman').text('Structs: ' + report_json.structs.sets + '(FRA) : ' + report_json.structs.sets + ' (AMS)');
+                doc.font('Times-New-Roman').text('Index: ' + report_json.index.sets + '(FRA) : ' + report_json.index.sets + ' (AMS)');
                 doc.font('Times-New-Roman').text(' ');
                 break;
             }
 
             default: {
                 // SC4, 'MURICA
-                doc.font('Times-New-Roman').text('SC4' + ' \u2192 ' + 'SC4 : UT7');
-                doc.font('Times-New-Roman').text('Blobs' + ' \u2192 ' + report_json.blobs.sets + ' : ' + report_json.blobs.sets);
-                doc.font('Times-New-Roman').text('Structs' + ' \u2192 ' + report_json.structs.sets * 2 + ' : ' + report_json.structs.sets);
-                doc.font('Times-New-Roman').text('Index' + ' \u2192 ' + report_json.index.sets + ' : ' + report_json.index.sets);
+                doc.font('Times-New-Roman').text('SC4: ' + 'SC4 : UT7');
+                doc.font('Times-New-Roman').text('Blobs: ' + report_json.blobs.sets + ' (SC4) : ' + report_json.blobs.sets + ' (UT7)');
+                doc.font('Times-New-Roman').text('Structs: ' + report_json.structs.sets * 2 + ' (SC4) : ' + report_json.structs.sets + ' (UT7)');
+                doc.font('Times-New-Roman').text('Index: ' + report_json.index.sets + ' (SC4) : ' + report_json.index.sets + ' (UT7)');
                 doc.font('Times-New-Roman').text(' ');
             }
         }

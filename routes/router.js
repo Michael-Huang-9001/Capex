@@ -1,3 +1,5 @@
+const testing = false;
+
 const express = require("express");
 const router = express.Router();
 
@@ -6,38 +8,61 @@ const report_generator = require('../Script/ReportGenerator');
 
 const nodemailer = require('nodemailer');
 
-// Entry point for the app startup, grabs customer list from Archiving Dashboard
+const blob_cost = 6233.70;
+const struct_cost = 6233.70;
+const index_cost_EU = 6592.61;
+const index_cost_US = 13775.00;
+
+// Entry point for the app startup
 router.get("/", function (req, res) {
 
     // For testing
-    // let example = [
-    //     {name: "A", size: 200},
-    //     {name: "B", size: 67},
-    //     {name: "C", size: 45},
-    //     {name: "D", size: 33},
-    //     {name: "E", size: 18}
-    // ];
-    // example.sort((a, b) => {
-    //     return 0.5 - Math.random();
-    // });
-    // res.render('index', {
-    //     example: example,
-    //     location: null,
-    //     blobs: null,
-    //     structs: null,
-    //     index: null,
-    //     total: 0,
-    //     generate_report: false
-    // });
+    if (testing) {
+        let example = [
+            { name: "A", size: 200 },
+            { name: "B", size: 67 },
+            { name: "C", size: 45 },
+            { name: "D", size: 33 },
+            { name: "E", size: 18 }
+        ];
+        example.sort((a, b) => {
+            return 0.5 - Math.random();
+        });
+        res.render('index', {
+            example: example,
+            location: null,
+            blobs: null,
+            structs: null,
+            index: null,
+            total: 0,
+            generate_report: false,
+            blob_multiplier: blob_cost,
+            struct_multiplier: struct_cost,
+            index_multiplier: index_cost_US
+        });
+    } else {
+        //Use this in production
 
-    // Use this in production
-    res.render('index', {example: null, location: null, blobs: null, structs: null, index: null, total: 0, generate_report: false});
+        res.render('index', {
+            example: null,
+            location: null,
+            blobs: null,
+            structs: null,
+            index: null,
+            total: 0,
+            generate_report: false,
+            blob_multiplier: blob_cost,
+            struct_multiplier: struct_cost,
+            index_multiplier: index_cost_US
+        });
+    }
 });
 
 router.post("/", function (req, res) {
     //console.log('-- POSTED');
 
     try {
+        //throw new Error();
         let data = req.body.form;
 
         if (data) {
@@ -86,13 +111,17 @@ router.post("/", function (req, res) {
                 structs: structs,
                 index: indices,
                 total: sum,
-                generate_report: generate_report
+                generate_report: generate_report,
+                blob_multiplier: (req.body.blob_multiplier) ? req.body.blob_multiplier : blob_cost,
+                struct_multiplier: (req.body.struct_multiplier) ? req.body.struct_multiplier : struct_cost,
+                index_multiplier: (req.body.location == 'CAN' || req.body.location == 'EU') ? index_cost_EU : index_cost_US
             });
         } else {
-            res.redirect("/");
+            res.redirect(req.headers.referer);
         }
     } catch (error) {
-        res.redirect("/");
+        console.log(error);
+        res.redirect(req.headers.referer);
     }
 });
 
@@ -148,10 +177,10 @@ router.post("/download", function (req, res) {
                 location: req.body.location
             }, res);
         } else {
-            res.redirect("/");
+            res.redirect(req.headers.referer);
         }
     } catch (error) {
-        res.redirect("/");
+        res.redirect(req.headers.referer);
     }
 });
 
@@ -178,23 +207,23 @@ router.post("/email", function (req, res) {
             subject: '[' + new Date().toLocaleDateString() + '] Capex Calculation', // Subject line
             text: '', // plaintext body
             html: 'Location: ' + req.body.location +
-            '<br><br><table border="1">' + req.body.form +
-            '</table><br>' + req.body.total_size + '<br><table border="1">' + req.body.results +
-            '</table><br>' + req.body.results_text // html body
+                '<br><br><table border="1">' + req.body.form +
+                '</table><br>' + req.body.total_size + '<br><table border="1">' + req.body.results +
+                '</table><br>' + req.body.results_text // html body
         };
 
         // send mail with defined transport object
         transporter.sendMail(mail_contents, function (error, info) {
             if (error) {
                 console.log(error);
-                res.end(JSON.stringify({message: error.message, status: 200}));
+                res.end(JSON.stringify({ message: error.message, status: 200 }));
             } else {
                 console.log('Message sent: ' + info.response);
-                res.end(JSON.stringify({message: "Email sent to " + req.body.email + ".", status: 200}));
+                res.end(JSON.stringify({ message: "Email sent to " + req.body.email + ".", status: 200 }));
             }
         });
     } catch (error) {
-        res.end(JSON.stringify({message: "Email not sent.", status: 200}));
+        res.end(JSON.stringify({ message: "Email not sent.", status: 200 }));
     }
 });
 
