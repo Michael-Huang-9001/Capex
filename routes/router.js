@@ -186,7 +186,7 @@ router.post("/download", function (req, res) {
 
 router.post("/email", function (req, res) {
     try {
-        //console.log('POSTED IN EMAIL');
+        console.log('POSTED IN EMAIL');
         //console.log(req.body);
 
         // create reusable transporter object using the default SMTP transport
