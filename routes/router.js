@@ -8,7 +8,7 @@ const report_generator = require('../Script/ReportGenerator');
 
 const nodemailer = require('nodemailer');
 
-const blob_cost = 6233.70;
+const blob_cost = 4843.70;
 const struct_cost = 6233.70;
 const index_cost_EU = 6592.61;
 const index_cost_US = 13775.00;
